@@ -1,4 +1,10 @@
 void mousePressed () {
+  int num = MouseOverEnemyBeans();
+  
+  if (num != -1) {
+    enemyBeanCards[num].selected = !enemyBeanCards[num].selected;
+  }
+  
   int counter = 0;
   Iterator<Card> iterator = player().hand.iterator();
   while (iterator.hasNext()) {
@@ -11,15 +17,13 @@ void mousePressed () {
     }
 
     if (counter == player().OverCard()) {
-      if (phase == 2) {
-        card.selected = !card.selected;
-      } else {
+      if (phase == 1) {
         if (card.beanType == player().hand.peekLast().beanType && player().CanPlantBean(card.beanType) && plantedCounter < 2) {
           player().PlantBean(card.beanType, true);
           plantedCounter++;
           mainButton.clickable = true;
         }
-      }
+      } else card.selected = !card.selected;
     }
 
     counter++;

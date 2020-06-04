@@ -36,8 +36,8 @@ void InitializeBeans() {
   final int[] soyBeanValues = {2, 4, 6, 7};
   final int[] blackBeanValues = {2, 4, 5, 6};
   final int[] redBeanValues = {2, 3, 4, 5};
-  final int[] gardenBeanValues = {2, 3};
-  final int[] cocoaBeanValues = {2, 3, 4};
+  final int[] gardenBeanValues = {8, 2, 3};
+  final int[] cocoaBeanValues = {8, 2, 3, 4};
   
   beanValues.put(beanTypes.coffee, coffeeBeanValues);
   beanValues.put(beanTypes.wax, waxBeanValues);

@@ -19,7 +19,7 @@ class Button {
   };
 
   void Render() {
-  
+
     if (MouseOver() && mousePressed || !clickable) {
       image(buttonDownImage, x, y, w, h);
       fill(#444444);
@@ -34,7 +34,10 @@ class Button {
 
   void Clicked() {
     if (text == "Next") {
-      incrementPhase();
+      if (phase == 2) {
+        player().DrawCards(3);      
+        incrementPhase();
+      } else incrementPhase();
     } else if (text == "Harvest") {
       player().HarvestField(index);
     }

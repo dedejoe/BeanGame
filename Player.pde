@@ -9,14 +9,23 @@ class Player
   int maxBeanFields;
   beanTypes[] beanFields;
   int[] beanFieldAmounts;
+  AI aI;
   int beanY() { 
-    return height - (beanWidth / 3) - (beanHeight / 2 + (beanWidth * 5 / 8));
+    if (id == 0)
+      return height - (beanWidth / 3) - (beanHeight / 2 + (beanWidth * 5 / 8));
+    else {
+      return beanHeight * (id - 1) + beanHeight / 2;
+    }
   }
   int beanX() { 
-    return width / 2 - ((beanWidth / 2) * hand.size() / 2);
+    if (id == 0)
+      return width / 2 - ((beanWidth / 2) * hand.size() / 2);
+    else
+      return beanWidth / 2;
   }
 
   public Player(int _id) {
+    aI = new AI();
     numCoins = 0;
     id = _id;
     hand = new LinkedList();
@@ -42,13 +51,23 @@ class Player
 
       if (card.selected == true) {
         translate(0, -25);
-        image(beanImages.get(card.beanType), 0, 0);
+        if (id == 0)
+          image(beanImages.get(card.beanType), 0, 0);
+        else 
+        image(coinImage, 0, 0, beanWidth / 2, beanHeight / 2);
         translate(0, 25);
       } else {
-        image(beanImages.get(card.beanType), 0, 0);
+        if (id == 0)
+          image(beanImages.get(card.beanType), 0, 0);
+        else 
+        image(coinImage, 0, 0, beanWidth / 2, beanHeight / 2);
       }
 
-      translate((beanWidth / 3), 0);
+      if (id == 0)
+        translate((beanWidth / 3), 0);
+      else
+        translate((beanWidth / 12), 0);
+
       counter++;
     }
 
@@ -57,32 +76,54 @@ class Player
 
   public void RenderBeanFields() {
 
-    pushMatrix();
-    translate(width / 4 * 3 + beanWidth / 3, height / 10);
-
-    for (int i = 0; i < maxBeanFields; i++) {
-      if (beanFieldAmounts[i] == 0) {
-        continue;
-      }
-
-      translate(beanWidth / 1.9 * i, 0);
-
+    if (id == 0) {
       pushMatrix();
-      resetMatrix();
-      harvestFieldButtons[i].Render();
-      popMatrix();
+      translate(width / 4 * 3 + beanWidth / 3, height / 10);
 
-      int counter = 0;
+      for (int i = 0; i < maxBeanFields; i++) {
+        if (beanFieldAmounts[i] == 0) {
+          continue;
+        }
 
-      while (counter < beanFieldAmounts[i]) {
-        counter++;
-        image(beanImages.get(beanFields[i]), 0, 0, beanWidth / 2, beanHeight / 2);
-        translate(0, (beanWidth / 3));
+        translate(beanWidth / 1.9 * i, 0);
+
+        pushMatrix();
+        resetMatrix();
+        harvestFieldButtons[i].Render();
+        popMatrix();
+
+        int counter = 0;
+
+        while (counter < beanFieldAmounts[i]) {
+          counter++;
+          image(beanImages.get(beanFields[i]), 0, 0, beanWidth / 2, beanHeight / 2);
+          translate(0, (beanWidth / 3));
+        }
+
+        translate(-beanWidth / 1.9 * i, -(beanWidth / 3) * counter);
       }
+      popMatrix();
+    } else {
+      pushMatrix();
+      translate(beanX(), beanY() - beanHeight / 2);
 
-      translate(-beanWidth / 1.9 * i, -(beanWidth / 3) * counter);
+      for (int i = 0; i < maxBeanFields; i++) {
+        if (beanFieldAmounts[i] == 0) {
+          continue;
+        }
+
+        int counter = 0;
+
+        while (counter < beanFieldAmounts[i]) {
+          counter++;
+          image(beanImages.get(beanFields[i]), 0, 0, beanWidth / 4, beanHeight / 4);
+          translate(beanWidth / 8, 0);
+        }
+
+        translate(-beanWidth / 8 * counter, beanHeight / 4);
+      }
+      popMatrix();
     }
-    popMatrix();
   }
 
   public int OverCard() {
@@ -131,7 +172,7 @@ class Player
     if (fromHand)
       hand.removeLast();
     beanFields[i] = bean;
-    
+
     UpdateBeanFields();
   }
 
@@ -203,7 +244,8 @@ class Player
         return;
       }
     }
-    UpdateBeanFields();
+
     beanFieldAmounts[fieldNumber] = 0;
+    UpdateBeanFields();
   }
 }
